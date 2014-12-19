@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">NewRingRofile</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="normal">正常模式</string>
+    <string name="time">定时模式</string>
+    <string name="define">自定义模式</string>
+    <string name="profile">情景模式</string>
+    <string name="silence">静音</string>
+    <string name="ringAndVibrate">铃声和震动</string>
+    <string name="ring">铃声</string>
+    <string name="vibrate">震动</string>
+    <string name="Volume">声音音量</string>
+    <string name="settingTime">设置时间</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+</resources>
