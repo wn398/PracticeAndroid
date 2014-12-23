@@ -62,7 +62,17 @@ public class FileManager extends ListActivity {
         this.setTitle(file.getAbsolutePath());
         if(file.isDirectory()){
             this.currentDirectory = file;
-            fill(file.listFiles());
+            if(file.listFiles().length==0){
+                 this.directoryEntries.clear();
+                 this.directoryEntries.add(new SingleFileData(getString(R.string.up_one_level),getResources().getDrawable(R.drawable.uponelevel)));
+                 FileManagerAdapter fileManagerAdapter = new FileManagerAdapter(this);
+                 //将表设置进去
+                 fileManagerAdapter.setItems(this.directoryEntries);
+                    //添加lsitAdapter
+                 this.setListAdapter(fileManagerAdapter);
+            }else {
+                fill(file.listFiles());
+            }
         }else {
             fileOperation(file);
         }
