@@ -1,0 +1,2 @@
+这个工程主要目的是设置手机的情景模式，其中用到了AudioManger接口，在UI通过FragmentManger,利用fragment来模仿tabhost，
+通过hide()和show()方法来实现卡片切换
