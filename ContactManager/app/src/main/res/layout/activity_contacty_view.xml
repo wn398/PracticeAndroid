@@ -1,12 +1,98 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.wang.tim.contactmanager.ContactyView">
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/bg"
+    android:stretchColumns="1">
 
-    <TextView android:text="@string/hello_world" android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
 
-</RelativeLayout>
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_column="1"
+            android:padding="15dip"
+            android:text="@string/view_user" />
+    </TableRow>
+
+    <View
+        android:layout_height="3dip"
+        android:background="#ffffffff" />
+
+    <TableRow>
+
+        <TextView
+            android:padding="10dip"
+            android:text="@string/name" />
+
+        <TextView android:id="@+id/TextView_Name" />
+    </TableRow>
+
+    <View
+        android:layout_height="3dip"
+        android:background="#ffffffff" />
+
+    <TableRow>
+
+        <TextView
+            android:padding="10dip"
+            android:text="@string/mobile" />
+
+        <TextView android:id="@+id/TextView_Mobile" />
+    </TableRow>
+
+    <View
+        android:layout_height="3dip"
+        android:background="#ffffffff" />
+
+    <TableRow>
+
+        <TextView
+            android:padding="10dip"
+            android:text="@string/home" />
+
+        <TextView android:id="@+id/TextView_Home" />
+    </TableRow>
+
+    <View
+        android:layout_height="3dip"
+        android:background="#ffffffff" />
+
+    <TableRow>
+
+        <TextView
+            android:padding="10dip"
+            android:text="@string/address" />
+
+        <TextView android:id="@+id/TextView_Address" />
+    </TableRow>
+
+    <View
+        android:layout_height="3dip"
+        android:background="#ffffffff" />
+
+    <TableRow>
+
+        <TextView
+            android:padding="10dip"
+            android:text="@string/email" />
+
+        <TextView android:id="@+id/TextView_Email" />
+    </TableRow>
+
+    <View
+        android:layout_height="3dip"
+        android:background="#ffffffff" />
+
+    <TableRow>
+
+        <TextView
+            android:padding="10dip"
+            android:text="@string/blog" />
+
+        <TextView android:id="@+id/TextView_Blog" />
+    </TableRow>
+
+</TableLayout>

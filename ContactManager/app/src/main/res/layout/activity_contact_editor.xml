@@ -1,0 +1,39 @@
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.wang.tim.contactmanager.ContactEditor">
+    <TableRow>
+        <TextView android:text="@string/name"/>
+        <EditText android:id="@+id/EditName"/>
+    </TableRow>
+    <TableRow>
+        <TextView android:text="@string/mobile"/>
+        <EditText android:id="@+id/EditMobile"/>
+    </TableRow>
+    <TableRow>
+        <TextView android:text="@string/home"/>
+        <EditText android:id="@+id/EditHome"/>
+    </TableRow>
+    <TableRow>
+        <TextView android:text="@string/address"/>
+        <EditText android:id="@+id/EditAddress"/>
+    </TableRow>
+    <TableRow>
+        <TextView android:text="@string/email"/>
+        <EditText android:id="@+id/EditEmail"/>
+    </TableRow>
+    <TableRow>
+        <TextView android:text="@string/blog"/>
+        <EditText android:id="@+id/EditBlog"/>
+    </TableRow>
+
+    <TableRow>
+        <Button android:id="@+id/Button_OK"
+            android:text="@string/ok"/>
+        <Button android:id="@+id/Button_Cancle"
+            android:text="@string/cancel"/>
+    </TableRow>
+</TableLayout>
