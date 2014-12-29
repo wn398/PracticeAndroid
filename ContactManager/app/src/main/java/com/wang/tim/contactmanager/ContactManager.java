@@ -1,11 +1,13 @@
 package com.wang.tim.contactmanager;
 
 import android.app.ListActivity;
+import android.content.ComponentName;
 import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,6 +28,7 @@ public class ContactManager extends ListActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.e(TAG,"onCreate");
         setDefaultKeyMode(DEFAULT_KEYS_SHORTCUT);
         Intent intent = getIntent();
         if(intent.getData()==null){
@@ -43,14 +46,16 @@ public class ContactManager extends ListActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        Log.e(TAG,"onCreateOptionsMenu");
         super.onCreateOptionsMenu(menu);
-        //添加
+        //添加联系人
         menu.add(0, AddContact_ID, 0, R.string.add_user).setShortcut('3', 'a').setIcon(R.drawable.add);
         Intent intent = new Intent(null,getIntent().getData());
         intent.addCategory(Intent.CATEGORY_ALTERNATIVE);
-
+        menu.addIntentOptions(Menu.CATEGORY_ALTERNATIVE,0,0,new ComponentName(this,ContactManager.class),null,intent,0,null);
         //退出程序
         menu.add(0,EXITContact_ID,0,R.string.exit).setShortcut('4','d').setIcon(R.drawable.exit);
+
         return true;
     }
 

@@ -21,19 +21,19 @@ public class ContactProvider extends ContentProvider {
     private DBHelper dbHelper;
     private SQLiteDatabase contactsDB;
 
-    public static final String AUTHRITY = "com.wang.tim.contactmanager.ContentProvider";
+    public static final String AUTHRITY = "com.wang.tim.provider.ContentProvider";
     public static final String CONTACT_TABLE = "contacts";
     public static final Uri CONTENT_URI = Uri.parse("content://"+AUTHRITY+"/"+CONTACT_TABLE);
 
     //下面是自定义类型
     public static final int CONTACTS = 1;
     public static final int CONTACT_ID = 2;
-    private static final UriMatcher uriMathcer;
+    private static final UriMatcher uriMatcher;
     static {
-        uriMathcer = new UriMatcher(UriMatcher.NO_MATCH);
-        uriMathcer.addURI(AUTHRITY,"contacts",CONTACTS);
+        uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+        uriMatcher.addURI(AUTHRITY, "contacts", CONTACTS);
         //单独列
-        uriMathcer.addURI(AUTHRITY,"contacts/#",CONTACT_ID);
+        uriMatcher.addURI(AUTHRITY, "contacts/#", CONTACT_ID);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class ContactProvider extends ContentProvider {
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         int count;
-        switch (uriMathcer.match(uri)){
+        switch (uriMatcher.match(uri)){
             case CONTACTS:
                 count = contactsDB.delete(CONTACT_TABLE,selection,selectionArgs);
                 break;
@@ -64,7 +64,7 @@ public class ContactProvider extends ContentProvider {
     //URI类型转换
     @Override
     public String getType(Uri uri){
-        switch (uriMathcer.match(uri)){
+        switch (uriMatcher.match(uri)){
             case CONTACTS:
                 return "vnd.android.cursor.dir/vnd.wang.tim.contactmanager";
             case CONTACT_ID:
@@ -76,7 +76,7 @@ public class ContactProvider extends ContentProvider {
 
     @Override
     public Uri insert(Uri uri, ContentValues initialValues) {
-        if (uriMathcer.match(uri) != CONTACTS)
+        if (uriMatcher.match(uri) != CONTACTS)
         {
             throw new IllegalArgumentException("Unknown URI " + uri);
         }
@@ -133,7 +133,7 @@ public class ContactProvider extends ContentProvider {
         Log.e(TAG + ":query","in Query");
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
         qb.setTables(CONTACT_TABLE);
-        switch (uriMathcer.match(uri)){
+        switch (uriMatcher.match(uri)){
             case CONTACT_ID:
                 qb.appendWhere(ContactColumnInfo._ID + "="+uri.getPathSegments().get(1));
                 break;
@@ -158,8 +158,8 @@ public class ContactProvider extends ContentProvider {
         int count;
         Log.e(TAG + "update",values.toString());
         Log.e(TAG + "update",uri.toString());
-        Log.e(TAG + "update :match","" +uriMathcer.match(uri));
-        switch (uriMathcer.match(uri)){
+        Log.e(TAG + "update :match", "" + uriMatcher.match(uri));
+        switch (uriMatcher.match(uri)){
             case CONTACTS:
                 Log.e(TAG + "update",CONTACTS+"");
                 count = contactsDB.update(CONTACT_TABLE,values,selection,selectionArgs);

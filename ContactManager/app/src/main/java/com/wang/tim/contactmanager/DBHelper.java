@@ -13,8 +13,8 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String CONTACTS_TABLE = "contacts";//table name
 
     //create table
-    public static final String DATABASE_CREATE = "CREATE TABLE" + CONTACTS_TABLE + "("
-            +ContactColumnInfo._ID + " integer primarey key autoincrement,"
+    public static final String DATABASE_CREATE = "CREATE TABLE " + CONTACTS_TABLE + "("
+            +ContactColumnInfo._ID + " integer primary key autoincrement,"
             +ContactColumnInfo.NAME + " text,"
             +ContactColumnInfo.MOBILENUM + " text,"
             +ContactColumnInfo.HOMENUM + " text,"
