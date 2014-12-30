@@ -227,8 +227,8 @@ public class ContactEditor extends Activity {
             values.put(ContactColumnInfo.ADDRESS, addressText.getText().toString());
             values.put(ContactColumnInfo.EMAIL, emailText.getText().toString());
             values.put(ContactColumnInfo.BLOG, blogText.getText().toString());
-            Log.e(TAG+":onPause",mUri.toString());
-            Log.e(TAG+":onPause",values.toString());
+            Log.e(TAG+":updateContact",mUri.toString());
+            Log.e(TAG+":updateContact",values.toString());
             getContentResolver().update(mUri, values, null, null);
         }
         setResult(RESULT_CANCELED);

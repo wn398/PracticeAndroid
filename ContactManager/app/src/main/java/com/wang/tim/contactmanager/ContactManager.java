@@ -46,7 +46,7 @@ public class ContactManager extends ListActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        Log.e(TAG,"onCreateOptionsMenu");
+        Log.i(TAG,"onCreateOptionsMenu");
         super.onCreateOptionsMenu(menu);
         //添加联系人
         menu.add(0, AddContact_ID, 0, R.string.add_user).setShortcut('3', 'a').setIcon(R.drawable.add);

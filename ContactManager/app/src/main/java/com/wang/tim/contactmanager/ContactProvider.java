@@ -21,7 +21,7 @@ public class ContactProvider extends ContentProvider {
     private DBHelper dbHelper;
     private SQLiteDatabase contactsDB;
 
-    public static final String AUTHRITY = "com.wang.tim.provider.ContentProvider";
+    public static final String AUTHRITY = "com.wang.tim.provider.ContactProvider";
     public static final String CONTACT_TABLE = "contacts";
     public static final Uri CONTENT_URI = Uri.parse("content://"+AUTHRITY+"/"+CONTACT_TABLE);
 
@@ -65,9 +65,9 @@ public class ContactProvider extends ContentProvider {
     @Override
     public String getType(Uri uri){
         switch (uriMatcher.match(uri)){
-            case CONTACTS:
+            case CONTACTS://多行数据
                 return "vnd.android.cursor.dir/vnd.wang.tim.contactmanager";
-            case CONTACT_ID:
+            case CONTACT_ID://单行数据
                 return "vnd.android.cursor.item/vnd.wang.tim.contactmanager";
             default:
                 throw new IllegalArgumentException("Unsupported URI: "+uri);
@@ -84,7 +84,7 @@ public class ContactProvider extends ContentProvider {
         if (initialValues != null)
         {
             values = new ContentValues(initialValues);
-            Log.e(TAG + "insert", "initialValues is not null");
+            Log.e(TAG + "-insert", "initialValues is not null");
         }
         else
         {
@@ -115,13 +115,13 @@ public class ContactProvider extends ContentProvider {
         {
             values.put(ContactColumnInfo.BLOG, "");
         }
-        Log.e(TAG + "insert", values.toString());
+        Log.e(TAG + "-insert", values.toString());
         long rowId = contactsDB.insert(CONTACT_TABLE, null, values);
         if (rowId > 0)
         {
             Uri noteUri = ContentUris.withAppendedId(CONTENT_URI, rowId);
             getContext().getContentResolver().notifyChange(noteUri, null);
-            Log.e(TAG + "insert", noteUri.toString());
+            Log.e(TAG + "-insert", noteUri.toString());
             return noteUri;
         }
         throw new SQLException("Failed to insert row into " + uri);
@@ -156,18 +156,18 @@ public class ContactProvider extends ContentProvider {
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         int count;
-        Log.e(TAG + "update",values.toString());
-        Log.e(TAG + "update",uri.toString());
+        Log.e(TAG + "-update",values.toString());
+        Log.e(TAG + "-update",uri.toString());
         Log.e(TAG + "update :match", "" + uriMatcher.match(uri));
         switch (uriMatcher.match(uri)){
             case CONTACTS:
-                Log.e(TAG + "update",CONTACTS+"");
+                Log.e(TAG + "-update",CONTACTS+"");
                 count = contactsDB.update(CONTACT_TABLE,values,selection,selectionArgs);
                 break;
             case CONTACT_ID:
                 String contactID = uri.getPathSegments().get(1);
-                Log.e(TAG+"update",contactID+"");
-                count = contactsDB.update(CONTACT_TABLE,values,ContactColumnInfo._ID+"="+CONTACT_ID+
+                Log.e(TAG+"-update",contactID+"");
+                count = contactsDB.update(CONTACT_TABLE,values,ContactColumnInfo._ID+"="+contactID+
                         (!TextUtils.isEmpty(selection)? " AND (" +selection+")":""),selectionArgs);
                 break;
             default:
