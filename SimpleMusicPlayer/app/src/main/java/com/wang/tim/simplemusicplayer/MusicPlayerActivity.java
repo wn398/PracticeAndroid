@@ -138,12 +138,12 @@ class MusicListAdapter extends SimpleCursorAdapter{
         TextView artistView = (TextView)view.findViewById(android.R.id.text2);
 
         try {
-            String title = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE));
-            String artist = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST));
-            Log.e(TAG,title+"="+title);
-            Log.e(TAG,artist+"="+artist);
-            titleView.setText(title);
-            artistView.setText(artist);
+            byte[]  titleB = cursor.getBlob(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE));
+            byte[]  artistB = cursor.getBlob(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST));
+            Log.e(TAG,new String(titleB,"GBK"));
+            Log.e(TAG,new String(artistB,"GBK"));
+            titleView.setText(new String(titleB,"GBK"));
+            artistView.setText(new String(artistB,"GBK"));
 
         } catch (Exception e) {
             e.printStackTrace();
