@@ -1,1 +1,76 @@
 这个工程主要是使用Fragment,实现类似于新闻阅读的功能ＵＩ
+控件的可见性：
+android中所有控件都有可见性，可通过android:visibility指定。有三种模式visible,invisible和gone. visible是默认的。invisible表示控件不可见，但它仍然占据着原来的位置和大小，可以理解成控件变成透明状态了。gone则表示控件不仅不可见，而且不再占用任何屏幕空间。
+
+构建Dialog:
+AlerDialog.Builder dialog = new AlertDialog.Builder(context);
+ProgressDialog会在对话框中显示一个进度条：
+PrograssDialog prd = new ProgressDialog(context);
+i注意如果在setCancleable()中传入false,表示progressDialog是不能通过Back键取消的，这时要在数据加载完成后调用 ProgressDialog的dismiss()方法来关闭对话框，否则它会一直存在。
+
+LinearLayout中如果指定水平排列模式，则android:layout_gravity只能指定上下对齐方式才有效，同理如果LinearLayout如果指定为垂直排列模式，则layout_gravity只能指定水平对齐模式
+
+layout_weight与wrap_content相应用界面对屏幕的适配性非常好
+
+FrameLayout没有任何的定位方式，所有的控件都会摆放在布局的左上角。
+
+在TableLayout中每加入一个TableRow就表示在表格中添加了一行，然后在TableRow中每加入一个控件，就表示在该行中加入了一列。TableRow中的控件是不能指定宽度的。
+合并单元格可以通过android:layout_span="xx"来表示xx为要合并的个数。
+在TableLayout中可以通过android:stretchColumns=“x”来对表格列进行拉伸，指定为0则拉伸第1列，指定为1则拉伸第2列
+
+在安卓布局中，可以通过include layout="XXX"来引入其它布局
+
+自定义控件：LayoutInflater.from(context).inflate("布局文件"，this)
+在布局文件中添加自定义控件和添加普通控件的方式基本是一样的，只不过在添加自定义控件时候，我们需要指明控件的完整类名，包名在这里不可以省略。
+
+ListView控件使用，实现自己的adapter时getView（）方法有一个convertView参数，这个参数用于将之前加载好的布局进行缓存，以便之后进行重用。
+
+单位和尺寸
+pt是磅数，1磅=1/72英寸，一般pt会作为字体单位使用
+
+dp是密度无关像素，也被称作dip和px相比，它在不同密度的屏幕中的显示比例将保持一致。
+sp是可伸缩像素，它采用了和dp同样的设计理念，解决了文字大小甜酸问题
+Android中的密度就是屏幕每英寸所包含的像素数，通常以dpi为单位。如160dpi
+我们可以通过代码获得当前屏幕的密度值：
+float xdpi = getResources().getDisplayMetrics().xdpi;
+float ydpi = getResources().getDisplayMetrics().ydpi;
+根据Android的规定，在160dpi的屏幕上，1dp=1px,而在320dpi的屏幕上，1dp = 2px,因此会用 dp来指定控件的宽和高，就可以保证控件在不同密度的屏幕中的显示比例保持一致。
+sp的原理和dp是一样的，它主要是用于指定文字的大小。
+总结：在编写Android程序的时候，尽量将控件或布局的大小指定成match_parent或wrap_content，如果必须要指定一个固定值，则使用dp来作为单位，指定文字大小时候，使用sp作为单位。
+
+碎片：
+动态添加fragment:
+1.创建待添加的碎片实例
+2.获取到FragmentManger ,在活动中可以直接getFragmentManager()
+3.开启一个事务，通过调用beginTransaction()方法开启
+4.向容器内加入碎片，一般使用replace()方法实现，需要传入容器的id和待添加碎片实例
+5.提交事务，调用commit()方法来完成
+FragmentManager manager = getFragmentManager();
+FragmentTransaction transaction = manager.beginTransaction();
+transaction.replace(要替换的fragment id,fragment);
+transaction.commit();
+用碎片可以模拟返回栈，在FragmentTransaction中提供了一个addToBackStack()方法，可以用于将一个事务添加到返回栈中。
+为了方便碎片和活动之间通信，FragmentManager提供了一个类似于findViewById()的方法，findFragmentById(id);这样就可以调用碎片中的方法了。
+ 在碎片中调用活动里的方法用getActivity(),然后再去调用方法。
+碎片与碎片通信，则是通过活动的中间桥梁来实现。
+
+碎片的状态和回调：
+1.运行状态：当一个碎片是可见的，并且它所关联的活动正处于运行状态，该碎片也处于运行状态
+2.暂停状态：当一个活动进入暂停状态时（由于另一个未占满屏幕的活动被添加到了栈顶），与它相关联的可见碎片就会进入到暂停状态。
+3.停止状态
+当一个活动进入停止状态，与它相关联的碎片就会进入到停止状态。或者通过调用FragmentTransaction的remvoe(),replace()方法将碎片从活动中移除，但有在事务提交之前调用addToBackStack()方法，这时的碎片也会进入到停止状态。进入停止状态的碎片对用户是完全不可见的，有可能被系统回收
+4.销毁状态
+碎片总是依附于活动而存在的，当活动被销毁时，与它相关的碎片就会进入到销毁状态。或者通过调用FragmentTransaction的remove()，replace()方法将碎片从活动中移除，但在事务提交之前并没有调用addToBackStack()方法，这时的碎片也会进入到销毁状态。
+
+碎片除了有活动中的回调方法外，还有一些附加的方法：
+1. onAttach()  当碎片和活动建立关联时调用
+2. onCreateView() 为碎片创建视图（加载布局）时调用
+3. onActivityCreated() 确保与碎片相关联的活动一定已经创建完毕时调用
+4. onDestroyView() 当与碎片关联的视图被移除时调用
+5  onDetach() 当碎片和活动解除关联的时候调用。
+
+动态加载布局的技巧：
+使用限定符（Qualifiers）layout文件夹与layout-large文件夹
+
+
+最小宽度限定符允许我们对屏幕的宽度指定一个最小值（以dp为单位），然后以这个最小值为临界点，屏幕宽度大于这个值的设备加载这个布局，屏幕小于这个值的设备就加载另一个默认布局。如在res目录下建layout-sw600dp文件夹
