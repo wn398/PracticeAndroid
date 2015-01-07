@@ -1,0 +1,35 @@
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.wang.tim.forceoffline.LoginActivity">
+
+    <TableRow>
+        <TextView
+            android:text="inputName"
+            android:layout_width="wrap_content"/>
+        <EditText
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:id="@+id/inputName"/>
+
+    </TableRow>
+    <TableRow>
+        <TextView
+            android:text="password"
+            android:layout_width="wrap_content"/>
+        <EditText
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:id="@+id/password"
+            android:inputType="textPassword"/>
+    </TableRow>
+    <TableRow android:orientation="horizontal" android:layout_width="match_parent">
+        <Button
+            android:id="@+id/submitBtn"
+            android:text="submit"
+            android:layout_width="match_parent"
+            android:layout_weight="1" />
+    </TableRow>
+</TableLayout>
