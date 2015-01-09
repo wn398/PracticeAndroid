@@ -18,7 +18,8 @@ import java.io.File;
 public class MainActivity extends ActionBarActivity {
     private static final int TAKE_PHOTO =1;
     private static final int CROP_PHOTO =2;
-    private Button button;
+    private Button takePhotoButton;
+    private Button selectPhotoButton;
     private ImageView imageView;
     private Uri imageUri;
     @Override
@@ -26,21 +27,21 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //主页上一个拍照的按钮，一个imageView来显示最后的照片
-        button = (Button)findViewById(R.id.takePhoto);
+        takePhotoButton = (Button)findViewById(R.id.takePhoto);
         imageView = (ImageView)findViewById(R.id.imageView);
 
-        button.setOnClickListener(new View.OnClickListener() {
+        takePhotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //创建要储存相片的文件
-                File imageFile = new File(Environment.getExternalStorageDirectory(),"image.jpg");
-                try{
-                    if(imageFile.exists()){
+                File imageFile = new File(Environment.getExternalStorageDirectory(), "image.jpg");
+                try {
+                    if (imageFile.exists()) {
                         imageFile.delete();
-                    }else{
-                        imageFile.createNewFile();
                     }
-                }catch (Exception e){
+                        imageFile.createNewFile();
+
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 //解析这个相片文件为uri
@@ -48,7 +49,30 @@ public class MainActivity extends ActionBarActivity {
                 //启动相关照相程序
                 Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-                startActivityForResult(intent,TAKE_PHOTO);//照相，请求代码设置为TAKE_PHOTO
+                startActivityForResult(intent, TAKE_PHOTO);//照相，请求代码设置为TAKE_PHOTO
+            }
+        });
+        //选择相片从相册
+        selectPhotoButton = (Button)findViewById(R.id.selectFromAlbum);
+        selectPhotoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                File imageFile = new File(Environment.getExternalStorageDirectory(),"image2.jpg");
+                try{
+                    if(imageFile.exists()){
+                        imageFile.delete();
+                    }
+                    imageFile.createNewFile();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                imageUri = Uri.fromFile(imageFile);
+                Intent intent = new Intent("android.intent.action.GET_CONTENT");
+                intent.setType("image/*");
+                intent.putExtra("crop",true);
+                intent.putExtra("scale",true);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT,imageUri);
+                startActivityForResult(intent,CROP_PHOTO);
             }
         });
     }
