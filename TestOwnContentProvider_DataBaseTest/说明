@@ -1,0 +1,2 @@
+这个工程主要是测试，DataBaseTest_WithOwnContentProvider 工程是否成功地提供了ContentProvider外部跨程序数据访问能力，同时也是如何
+使用ContentResolver
