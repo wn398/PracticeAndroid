@@ -1,0 +1,4 @@
+主要是如何使用service, 里面有三个自己的service,myservice是自己测试的service综合使用了自定义的binder，模拟绑定service开启下载
+，MyIntentService是一个特殊的执行完自动关闭的service,AlarmService是一个定时alarm的service,在onStartCommand()方法中中主要通过AlarmManager的set方法
+定时去执行一个广播，而广播接收器AlarmReceiver接收到广播就会启动AlarmService,从而会再次调用onStartCommand()方法，这样就形成了一个无限
+循环执行定时alarm提醒。
