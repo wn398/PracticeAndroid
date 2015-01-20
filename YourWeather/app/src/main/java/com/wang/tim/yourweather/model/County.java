@@ -3,11 +3,11 @@ package com.wang.tim.yourweather.model;
 /**
  * Created by twang on 2015/1/19.
  */
-public class City {
+public class County {
     private int id;
-
+    private int country_code;
     private String name;
-    private int province_id;
+    private int city_id;
 
     public int getId() {
         return id;
@@ -17,12 +17,12 @@ public class City {
         this.id = id;
     }
 
-    public int getProvince_id() {
-        return province_id;
+    public int getCountry_code() {
+        return country_code;
     }
 
-    public void setProvince_id(int province_id) {
-        this.province_id = province_id;
+    public void setCountry_code(int country_code) {
+        this.country_code = country_code;
     }
 
     public String getName() {
@@ -33,5 +33,11 @@ public class City {
         this.name = name;
     }
 
+    public int getCity_id() {
+        return city_id;
+    }
 
+    public void setCity_id(int city_id) {
+        this.city_id = city_id;
+    }
 }

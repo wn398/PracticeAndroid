@@ -12,9 +12,9 @@ public class DBhelper extends SQLiteOpenHelper {
     public static final String city_table_name = "city";
     public static final String country_table_name = "country";
 
-    private static final String create_table_province = "create table"+ province_table_name+"(id Integer primary key,name Text)";
-    private static final String create_table_city = "create table"+city_table_name+"(id Integer primary key, name Text, city_code Text, province_id Integer)";
-    private static final String create_table_country = "create table"+country_table_name+"(id Integer primary key,name Text,country_code Integer,city_id Integer)";
+    private static final String create_table_province = "create table "+ province_table_name+"(id Integer primary key,name Text)";
+    private static final String create_table_city = "create table "+city_table_name+"(id Integer primary key, name Text, city_code Text, province_id Integer)";
+    private static final String create_table_country = "create table "+country_table_name+"(id Integer primary key,name Text,country_code Integer,city_id Integer)";
 
     public DBhelper(Context context,String name,SQLiteDatabase.CursorFactory factory,int version){
         super(context,name,factory,version);
@@ -30,6 +30,6 @@ public class DBhelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        this.onCreate(db);
     }
 }
