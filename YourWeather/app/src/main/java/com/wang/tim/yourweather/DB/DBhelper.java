@@ -25,7 +25,6 @@ public class DBhelper extends SQLiteOpenHelper {
         db.execSQL(create_table_province);
         db.execSQL(create_table_city);
         db.execSQL(create_table_country);
-
     }
 
     @Override

@@ -33,7 +33,7 @@ public class WeatherDB {
            }else{
                return weatherDB;
            }
-        return null;
+        return weatherDB;
     }
 
     public void saveProvince(Province province){
@@ -78,6 +78,7 @@ public class WeatherDB {
                 list.add(province);
             } while (cursor.moveToNext());
         }
+        Log.d(TAG,"loadAllProvince()--"+list.size());
         return list;
     }
     public Cursor loadTheProvinceCityCursor(int province_id){

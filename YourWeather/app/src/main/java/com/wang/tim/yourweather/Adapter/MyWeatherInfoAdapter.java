@@ -18,6 +18,7 @@ import com.wang.tim.yourweather.util.NetWorkUtil;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -67,12 +68,16 @@ public class MyWeatherInfoAdapter extends BaseAdapter {
                 String temp1 = weatherInfo.getString("temp1");
                 String temp2 = weatherInfo.getString("temp2");
                 String weather = weatherInfo.getString("weather");
-                final String img1 = weatherInfo.getString("img1");
+                final String img1 = weatherInfo.getString("img1").replaceFirst("[n,d]", "b");
+                final String img2 = weatherInfo.getString("img2").replaceFirst("[n,d]", "b");
+
                 String pTime = weatherInfo.getString("ptime");
 
                 place.setText(city);
-                Date date = new Date();
-                time.setText(date.getYear() + "年" + date.getMonth() + "月" + date.getDay() + "日" + ":" + pTime);
+
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                String dateStr = sdf.format(new Date());
+                time.setText(dateStr + ":" + pTime);
                 temperature.setText(temp1 + "~" + temp2);
                 description.setText(weather);
                 File file = new File(context.getCacheDir() + "/" + img1);

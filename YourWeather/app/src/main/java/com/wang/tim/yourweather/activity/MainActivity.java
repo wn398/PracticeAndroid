@@ -23,8 +23,14 @@ import com.wang.tim.yourweather.R;
 import com.wang.tim.yourweather.util.DBinitUtil;
 import com.wang.tim.yourweather.util.NetWorkUtil;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 public class MainActivity extends ActionBarActivity {
     private static final int UPDATE_VIEW = 1;
@@ -32,31 +38,29 @@ public class MainActivity extends ActionBarActivity {
     private ImageButton setting;
     private ListView weatherList;
     private Handler handler;
-    private SharedPreferences preferences;
-    private SharedPreferences.Editor editor;
-    private List<String> list = new ArrayList<String>();
+    private  SharedPreferences preferences;
+    private  SharedPreferences.Editor editor;
+    private  Map<Integer,String> map = new HashMap<Integer,String>();
+    private List<String> jsonList = new ArrayList<String>();
+    private WeatherDB weatherDB;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         preferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
         editor=preferences.edit();
-        if(!preferences.getBoolean("DB",false)){
-            DBinitUtil.initDB(WeatherDB.getInstance(MainActivity.this),getResources().openRawResource(R.raw.citycode));
-            editor.putBoolean("DB",true);
+        weatherDB = WeatherDB.getInstance(MainActivity.this);
+        if(weatherDB.loadAllProvince().size()==0) {
+            DBinitUtil.initDB(weatherDB, getResources().openRawResource(R.raw.citycode));
         }
-
-        refresh = (ImageButton)findViewById(R.id.refresh);
-        setting = (ImageButton)findViewById(R.id.setting);
-        weatherList = (ListView)findViewById(R.id.weatherList);
-        final MyWeatherInfoAdapter myWeatherInfoAdapter = new MyWeatherInfoAdapter(MainActivity.this,list);
-        weatherList.setAdapter(myWeatherInfoAdapter);
-
+        final MyWeatherInfoAdapter myWeatherInfoAdapter = new MyWeatherInfoAdapter(MainActivity.this,jsonList);
         handler = new Handler(){
             @Override
             public void handleMessage(Message msg) {
                 switch (msg.what){
                     case UPDATE_VIEW:
+                        jsonList.clear();
+                        jsonList.addAll(map.values());
                         myWeatherInfoAdapter.notifyDataSetChanged();
                         break;
                     default:
@@ -64,10 +68,42 @@ public class MainActivity extends ActionBarActivity {
                 }
             }
         };
+        FileInputStream fileInputStream=null;
+        try {
+            fileInputStream = openFileInput("data.properties");
+            if(fileInputStream!=null){
+                Properties properties = new Properties();
+                properties.load(fileInputStream);
+                for(Object key:properties.keySet()){
+                    String key1 = (String)key;
+                    map.put(Integer.parseInt(key1),(String)properties.get(key1));
+                }
+                if(map.size()>0){
+                    Message message = new Message();
+                    message.what = UPDATE_VIEW;
+                    handler.sendMessage(message);
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            try {
+                if(fileInputStream!=null) {
+                    fileInputStream.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        refresh = (ImageButton)findViewById(R.id.refresh);
+        setting = (ImageButton)findViewById(R.id.setting);
+        weatherList = (ListView)findViewById(R.id.weatherList);
+
+        weatherList.setAdapter(myWeatherInfoAdapter);
+
+
         setting.setOnClickListener(new View.OnClickListener() {
-            int province_id;
-            int city_id;
-            int country_id;
             int weather_code;
             @Override
 
@@ -77,22 +113,28 @@ public class MainActivity extends ActionBarActivity {
                 final LayoutInflater lif = MainActivity.this.getLayoutInflater();
                 View view =lif.inflate(R.layout.choose_area,null);
                 builder.setView(view);
-                Spinner province = (Spinner)view.findViewById(R.id.province);
+                final Spinner province = (Spinner)view.findViewById(R.id.province);
                 final Spinner city = (Spinner)view.findViewById(R.id.city);
                 final Spinner country = (Spinner)view.findViewById(R.id.country);
 
-                MyPlaceAdapter prinvinceAdapter = new MyPlaceAdapter(MainActivity.this,WeatherDB.getInstance(MainActivity.this).loadAllProvince());
-//                if(preferences.getInt("province_id",1)!=1){
-//                    province.setSelection(prinvinceAdapter.getItemId());
-//                }
-                province.setAdapter(prinvinceAdapter);
+                MyPlaceAdapter provinceAdapter = new MyPlaceAdapter(MainActivity.this,WeatherDB.getInstance(MainActivity.this).loadAllProvince());
+
+                province.setAdapter(provinceAdapter);
+                if(preferences.getInt("province_position",-1)!=-1){
+                    province.setSelection(preferences.getInt("province_position", -1));
+                }
+
                 province.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         TextView idView = (TextView)view.findViewById(R.id.id);
                         int selected_province_id = Integer.parseInt(idView.getText().toString());
                         city.setAdapter(new MyPlaceAdapter(MainActivity.this,WeatherDB.getInstance(MainActivity.this).loadTheProvinceCity(selected_province_id)));
-                        province_id = selected_province_id;
+                        if(preferences.getInt("city_position",-1)!=-1 && city.getSelectedItemPosition() == 0&&province.getSelectedItemPosition()==preferences.getInt("province_position",-1)){
+                            city.setSelection(preferences.getInt("city_position",-1));
+                        }
+                        editor.putInt("province_position",position);
+                        editor.apply();
                     }
 
                     @Override
@@ -107,6 +149,12 @@ public class MainActivity extends ActionBarActivity {
                         TextView idView = (TextView) view.findViewById(R.id.id);
                         int selected_city_id = Integer.parseInt(idView.getText().toString());
                         country.setAdapter(new MyPlaceAdapter(MainActivity.this, WeatherDB.getInstance(MainActivity.this).loadTheCityCountry(selected_city_id)));
+                        if(preferences.getInt("county_position",-1)!=-1 && country.getSelectedItemPosition()==0 &&city.getSelectedItemPosition() ==preferences.getInt("city_position",-1)){
+                            country.setSelection(preferences.getInt("county_position",-1));
+                        }
+
+                        editor.putInt("city_position",position);
+                        editor.apply();
                     }
 
                     @Override
@@ -121,12 +169,17 @@ public class MainActivity extends ActionBarActivity {
                         TextView idView = (TextView)view.findViewById(R.id.id);
                         int selected_country_id = Integer.parseInt(idView.getText().toString());
                         weather_code = WeatherDB.getInstance(MainActivity.this).getWeatherCodeById(selected_country_id);
+
+                        editor.putInt("county_position",position);
+                        editor.apply();
                     }
                     @Override
                     public void onNothingSelected(AdapterView<?> parent) {
 
                     }
                 });
+
+
                 builder.setPositiveButton("确定",new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -134,7 +187,7 @@ public class MainActivity extends ActionBarActivity {
                             @Override
                             public void run() {
                                 String result = NetWorkUtil.getDataFromNet("http://www.weather.com.cn/data/cityinfo/"+weather_code+".html");
-                                list.add(result);
+                                map.put(weather_code,result);
                                 Message message = new Message();
                                 message.what = UPDATE_VIEW;
                                 handler.sendMessage(message);
@@ -152,5 +205,47 @@ public class MainActivity extends ActionBarActivity {
                 builder.show();
             }
         });
+
+        refresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        for(int i:map.keySet()){
+                            String result = NetWorkUtil.getDataFromNet("http://www.weather.com.cn/data/cityinfo/"+i+".html");
+                            map.put(i,result);
+                        }
+                        Message message = new Message();
+                        message.what = UPDATE_VIEW;
+                        handler.sendMessage(message);
+                    }
+                }).start();
+            }
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onStop();
+        Properties properties = new Properties();
+        for(int key:map.keySet()){
+            properties.put(key+"",map.get(key));
+        }
+        FileOutputStream fileOutputStream=null;
+        try {
+            fileOutputStream = openFileOutput("data.properties", MODE_PRIVATE);
+            properties.store(fileOutputStream,"catch the data");
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            if (fileOutputStream != null) {
+                try {
+                    fileOutputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }
