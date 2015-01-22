@@ -1,0 +1,32 @@
+AppWidget框架主要包括以下类：
+1. AppWidgetProvider:继承自BroadcastReceiver，在AppWidget应用update,enable,disable和deleted时接收通知。其中，onUpdate,onReceiver是最常用方法，它们接收更新通知
+2. AppWidgetProviderInfo:描述AppWidget的大小，更新频率和初始界面等信息，以XML文件形式存在于应用的res/xml/目录下。
+3.AppWidgetManager:负责管理AppWidget，向AppWidgetProvider发送通知。
+4.RemoteViews:一个可以在其他应用进程中运行的类，是构造AppWidget的核心。
+步骤：
+首先，制定widget的UI布局，即remoteView对应的布局文件
+其次，在res/xml/下添加一个能反映AppWidgetProviderInfo信息的布局文件。AppWidget的像素大小取决于它所占的方块多少，其计算公式是(块数*74)-2. 其中android:initialLayout设置了AppWidget的布局文件
+<appwidget-provider 
+xmlns:android="http://schemas.android.com/apk/res/android" 
+android:initialLayout="@layout/widget_layout" 
+android:minWidth="146dip" android:minHeight="146dip" android:updatePeriodMillis="3600000"> 
+</appwidget-provider>
+再次，需要创建一个类继承自AppWidgetProvider的类，当我们添加AppWidget应用 或自动定时更新时，AppWidgetManager会广播动作名字是“android.appwidget.action.APPWIDGET_UPDATE“的Intent,当onRecever()方法没有被重载时，onUpdate()方法会接收到这些广播的Intent.类似于普通BroadcastReceiver类，我们可以重载AppWidgetProvider的onReceive方法，并在其中指定想要接收的Intent.
+public class TodayDate extends AppWidgetProvider
+{
+    public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds)
+ {
+  RemoteViews updateView = buildUpdate(context);
+  appWidgetManager.updateAppWidget(appWidgetIds, updateView);
+  super.onUpdate(context, appWidgetManager, appWidgetIds);
+ }
+第四：AndroidMainfest.xml权限设置
+我们使用了receiver及其”android.appwidget.action.APPWIDGET_UPDATE“，所以需要声明
+<application android:icon="@drawable/icon" android:label="@string/app_name">
+        <receiver android:label="@string/app_name" android:name=".TodayDate">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"></action>
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget"></meta-data>
+        </receiver>
+Widget开发，其实就是只需要设计好UI,然后根据需要来完成更新。如果程序不需要使用定时更新，则建议不要使用定时更新，因为它会增加电量和CPU资源开销。我们可以自定义一个线程，当需要更新时才更新，这样让Widget达到最高效率。
