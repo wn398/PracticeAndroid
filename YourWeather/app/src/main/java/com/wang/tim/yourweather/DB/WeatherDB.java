@@ -139,5 +139,15 @@ public class WeatherDB {
         return -1;
     }
 
-
+    public int getCityCodeByName(String name){
+        Log.d(TAG,"getCityCodeByName()");
+        Cursor cursor =db.query(DBhelper.country_table_name,null,"name=?",new String[]{name},null,null,null);
+        if(cursor.moveToFirst()){
+            if(1==cursor.getCount()){
+                int cityCode = cursor.getInt(cursor.getColumnIndex("id"));
+                return cityCode;
+            }
+        }
+        return -1;
+    }
 }

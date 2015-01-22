@@ -68,8 +68,8 @@ public class MyWeatherInfoAdapter extends BaseAdapter {
                 String temp1 = weatherInfo.getString("temp1");
                 String temp2 = weatherInfo.getString("temp2");
                 String weather = weatherInfo.getString("weather");
-                final String img1 = weatherInfo.getString("img1").replaceFirst("[n,d]", "b");
-                final String img2 = weatherInfo.getString("img2").replaceFirst("[n,d]", "b");
+                final String img1 = weatherInfo.getString("img1");//.replaceFirst("[n,d]", "b");
+                final String img2 = weatherInfo.getString("img2");//.replaceFirst("[n,d]", "b");
 
                 String pTime = weatherInfo.getString("ptime");
 
