@@ -1,0 +1,54 @@
+<PreferenceScreen
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="PreferenceCategory 1">
+        <CheckBoxPreference
+            android:key="CheckBox1"
+            android:title="CheckBox"
+            android:summaryOn="某功能: 开启"
+            android:summaryOff="某功能: 关闭"
+            android:defaultValue="true"
+            />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="PreferenceCategory 2">
+        <PreferenceScreen android:title="二级PreferenceScreen">
+            <CheckBoxPreference
+                android:key="CheckBox2"
+                android:title="CheckBox"
+                android:summaryOn="某功能: 开启"
+                android:summaryOff="某功能: 关闭"
+                android:defaultValue="true"
+                />
+        </PreferenceScreen>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="PreferenceCategory 3">
+        <ListPreference
+            android:key="ListPreference"
+            android:title="ListPreference"
+            android:summary="ListPreference测试"
+            android:dialogTitle="ListPreference"
+            android:entries="@array/entries_list_preference"
+            android:entryValues="@array/entriesvalue_list_preference"
+            />
+        <EditTextPreference
+            android:key="EditTextPreference"
+            android:title="EditTextPreference"
+            android:summary="点击输入"
+            android:dialogTitle="输入设置"
+            />
+        <RingtonePreference
+            android:key="RingtonePreference"
+            android:title="RingtonePreference"
+            android:summary="选择铃声"
+            />
+        <MultiSelectListPreference
+            android:key="MultiSelectedListPreference"
+            android:title="MultiSelectedListPreference"
+            android:summary="多项选择"
+            android:entries="@array/entries_list_preference"
+            android:entryValues="@array/entriesvalue_list_preference"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
