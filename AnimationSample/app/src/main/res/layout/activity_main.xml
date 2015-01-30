@@ -28,4 +28,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/propertyAnimation"/>
+    <Button
+        android:id="@+id/layoutAnimation"
+        android:layout_below="@+id/frameAnimation"
+        android:layout_alignParentLeft="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/layoutAnimation"/>
 </RelativeLayout>

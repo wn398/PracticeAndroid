@@ -32,6 +32,10 @@
             android:name=".PropertyAnimationActivity"
             android:label="@string/title_activity_property_animation" >
         </activity>
+        <activity
+            android:name=".LayoutAnimationActivity"
+            android:label="@string/title_activity_layout_animation" >
+        </activity>
     </application>
 
 </manifest>

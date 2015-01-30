@@ -23,4 +23,11 @@
     <string name="sd">缩小淡出</string>
     <string name="sd2">缩淡另式</string>
     <string name="down">落体</string>
+    <string name="pwx">抛物</string>
+    <string name="moreD">多动画</string>
+    <string name="moreD2">多画次</string>
+    <string name="scale2">左角缩</string>
+    <string name="title_activity_layout_animation">LayoutAnimationActivity</string>
+    <string name="layoutAnimation">布局动画</string>
+
 </resources>
